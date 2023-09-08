@@ -13,6 +13,14 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
 
+    <EditText
+        android:id="@+id/searchEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите запрос"
+        android:inputType="text"
+        android:imeOptions="actionSearch"/>
+
     <Button
         android:id="@+id/button_main"
         android:layout_width="wrap_content"

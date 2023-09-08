@@ -33,6 +33,8 @@ class AnotherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_another)
+
+
         chronometer = findViewById(R.id.chronometer)
         this.recyclerView = findViewById(R.id.recyclerView)
 

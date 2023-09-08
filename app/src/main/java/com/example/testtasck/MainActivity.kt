@@ -15,11 +15,13 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.webkit.CookieManager
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
@@ -29,6 +31,7 @@ private val FILE_PICKER_REQUEST_CODE = 123
 private lateinit var mFirebaseRemoteConfig: FirebaseRemoteConfig
 private lateinit var sharedPrefs: SharedPreferences
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
@@ -39,6 +42,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Установка темы обратно на основную тему после отображения сплэш-экрана
+        setTheme(R.style.SplashTheme)
+
+        setContentView(R.layout.activity_main)
+
+
+
         if (isNetworkAvailable()) {
             // Интернет доступен, выполните действия, которые требуют интернет-соединения
         } else {
@@ -48,13 +58,28 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
-
         val webView = findViewById<WebView>(R.id.webView)
+
+        // Настройки WebView
+
+
+
+        // Настройки CookieManager
+        val cookieManager = CookieManager.getInstance()
+        cookieManager.setAcceptCookie(true)
+
         val searchEditText = findViewById<EditText>(R.id.searchEditText)
         webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
         val webSettings = webView.settings
         webSettings.javaScriptEnabled = true
+        webSettings.javaScriptEnabled = true
+        webSettings.domStorageEnabled = true
+        webSettings.databaseEnabled = true
+        webSettings.setSupportZoom(false)
+        webSettings.allowFileAccess = true
+        webSettings.allowContentAccess = true
+        webSettings.loadWithOverviewMode = true
+        webSettings.useWideViewPort = true
 
         webView.setOnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
@@ -100,28 +125,29 @@ class MainActivity : AppCompatActivity() {
         // Пытаемся получить сохраненную ссылку из SharedPreferences
         val savedUrl = sharedPrefs.getString("savedUrl", "")
 
-        // Выполняем запрос на получение данных
-        mFirebaseRemoteConfig.fetchAndActivate()
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val url = mFirebaseRemoteConfig.getString("url")
+        try {
+            // Выполняем запрос на получение данных
+            mFirebaseRemoteConfig.fetchAndActivate()
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        val url = mFirebaseRemoteConfig.getString("url")
 
-                    // Сохраняем полученную ссылку в SharedPreferences
-                    with(sharedPrefs.edit()) {
-                        putString("savedUrl", url)
-                        apply()
-                    }
+                        // Сохраняем полученную ссылку в SharedPreferences
+                        with(sharedPrefs.edit()) {
+                            putString("savedUrl", url)
+                            apply()
+                        }
 
-                    // Выполните запрос на получение данных
-                    mFirebaseRemoteConfig.fetchAndActivate()
-                        .addOnCompleteListener(this) { task ->
-                            if (task.isSuccessful) {
-                                val url = mFirebaseRemoteConfig.getString("url")
-                                Log.d(
-                                    "MainActivity",
-                                    "Получена ссылка из Firebase Remote Config: $url"
-                                )
-
+                        // Выполните запрос на получение данных
+                        mFirebaseRemoteConfig.fetchAndActivate()
+                            .addOnCompleteListener(this) { task ->
+                                if (task.isSuccessful) {
+                                    val url = mFirebaseRemoteConfig.getString("url")
+                                    Log.d(
+                                        "MainActivity",
+                                        "Получена ссылка из Firebase Remote Config: $url"
+                                    )
+                                }
                                 // Проверяем условия
                                 if (url.isEmpty() || isGoogleDevice(url) || isEmulator(url)) {
                                     // Открываем заглушку (AnotherActivity)
@@ -157,25 +183,30 @@ class MainActivity : AppCompatActivity() {
 
                                 }
                             }
-                        }
+                    }
                 }
-            }
+        } catch (e: Exception) {
+            showErrorScreen()
+            Log.e("MainActivity", "Ошибка при обработке Firebase Remote Config: ${e.message}")
+        }
+
 
         val buttonMain = findViewById<Button>(R.id.button_main)
 
         Log.d("MainActivity", "Activity создана")
 
-        buttonMain.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View?) {
-                val intent = Intent(this@MainActivity, AnotherActivity::class.java)
-                startActivity(intent)
-                Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
-            }
-        })
+        buttonMain.setOnClickListener(
+            object : View.OnClickListener {
+                override fun onClick(view: View?) {
+                    val intent = Intent(this@MainActivity, AnotherActivity::class.java)
+                    startActivity(intent)
+                    Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
+                }
+            })
 
     }
 
-    // Функция для проверки, что это устройство Google
+// Функция для проверки, что это устройство Google
 
     private fun isGoogleDevice(url: String): Boolean {
         Log.d("MainActivity", "isGoogle:")
@@ -192,6 +223,16 @@ class MainActivity : AppCompatActivity() {
             getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
         return networkInfo?.isConnectedOrConnecting == true
+    }
+
+    private fun showErrorScreen() {
+        setContentView(R.layout.activity_no_internet)
+        val errorMessageTextView = findViewById<TextView>(R.id.textViewNoInternet)
+        errorMessageTextView.setOnClickListener {
+            val intent = Intent(this@MainActivity, NoInternetActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

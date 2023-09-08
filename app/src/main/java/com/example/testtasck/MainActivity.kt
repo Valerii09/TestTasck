@@ -28,7 +28,7 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
     val webView = findViewById<WebView>(R.id.webView)
 
-    // Включение JavaScript (если требуется)
+    // Включение JavaScript
     webView.settings.javaScriptEnabled = true
 
     // Настройка WebViewClient, чтобы открывать ссылки внутри WebView
@@ -81,19 +81,32 @@ override fun onCreate(savedInstanceState: Bundle?) {
                                 )
                             } else {
                                 // Открываем страницу с полученной ссылкой
-                                // Например, можно использовать браузер
-                                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                Log.d(
+                                    "MainActivity",
+                                    "Условие не пройдено"
+                                )
+                                val chromePackageName = "com.android.chrome"
+                                val browserIntent = packageManager.getLaunchIntentForPackage(chromePackageName)
 
-// Проверьте, есть ли на устройстве приложение для открытия ссылок, и запустите его
-                                if (browserIntent.resolveActivity(packageManager) != null) {
-                                    startActivity(browserIntent)
-                                } else {
-                                    // В случае, если нет приложения для открытия ссылок, можно показать сообщение или выполнить альтернативные действия
-                                    Toast.makeText(
-                                        this,
-                                        "Не установлен браузер",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+
+// Проверка, есть ли на устройстве приложение для открытия ссылок
+                                if (browserIntent != null) {
+                                    if (browserIntent.resolveActivity(packageManager) != null) {
+                                        browserIntent.data = Uri.parse(url)
+                                        startActivity(browserIntent)
+                                        Log.d(
+                                            "MainActivity",
+                                            "Хром"
+                                        )
+                                    } else {
+
+                                        //  если нет приложения для открытия ссылок, выполнить альтернативные действия
+                                        Toast.makeText(
+                                            this,
+                                            "Не установлен браузер",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
                                 }
                             }
                         } else {
@@ -113,13 +126,13 @@ override fun onCreate(savedInstanceState: Bundle?) {
 
     Log.d("MainActivity", "Activity создана")
 
-//    buttonMain.setOnClickListener(object : View.OnClickListener {
-//        override fun onClick(view: View?) {
-//            val intent = Intent(this@MainActivity, AnotherActivity::class.java)
-//            startActivity(intent)
-//            Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
-//        }
-//    })
+    buttonMain.setOnClickListener(object : View.OnClickListener {
+        override fun onClick(view: View?) {
+            val intent = Intent(this@MainActivity, AnotherActivity::class.java)
+            startActivity(intent)
+            Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
+        }
+    })
 
 
 

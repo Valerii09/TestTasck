@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -32,9 +34,21 @@ class MainActivity : AppCompatActivity() {
         super.onConfigurationChanged(newConfig)
         // Обработка изменения ориентации здесь, если необходимо.
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        if (isNetworkAvailable()) {
+            // Интернет доступен, выполните действия, которые требуют интернет-соединения
+        } else {
+            // Интернет недоступен, переходите к экрану без интернета
+            startActivity(Intent(this, NoInternetActivity::class.java))
+            finish() // Завершаем текущую активность
+        }
+
+
+
 
         val webView = findViewById<WebView>(R.id.webView)
         val searchEditText = findViewById<EditText>(R.id.searchEditText)
@@ -171,6 +185,13 @@ class MainActivity : AppCompatActivity() {
     private fun isEmulator(url: String): Boolean {
         Log.d("MainActivity", "isEmulator:")
         return !url.isNotEmpty() || Build.FINGERPRINT.startsWith("generic")
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val connectivityManager =
+            getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo: NetworkInfo? = connectivityManager.activeNetworkInfo
+        return networkInfo?.isConnectedOrConnecting == true
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

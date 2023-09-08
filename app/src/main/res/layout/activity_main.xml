@@ -8,11 +8,11 @@
 
     <WebView
         android:id="@+id/webView"
-        android:layout_width="415dp"
-        android:layout_height="596dp"
+        android:layout_width="match_parent"
+        android:layout_height="489dp"
         android:layout_below="@+id/searchEditText"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="-4dp"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="-7dp" />
 
     <EditText
@@ -25,8 +25,8 @@
 
     <Button
         android:id="@+id/button_main"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="280dp"
+        android:layout_height="110dp"
         android:layout_below="@+id/webView"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
@@ -34,7 +34,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginStart="86dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="84dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="73dp"
+        android:layout_marginBottom="64dp"
         android:text="Перейти на другую страницу" />
 </RelativeLayout>

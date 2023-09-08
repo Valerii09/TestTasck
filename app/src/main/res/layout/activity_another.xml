@@ -6,28 +6,95 @@
     android:layout_height="match_parent"
     tools:context=".AnotherActivity">
 
-    <TextView
-        android:id="@+id/textView"
+    <Chronometer
+        android:id="@+id/chronometer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="131dp"
-        android:layout_marginEnd="123dp"
-        android:layout_marginBottom="481dp"
-        android:text="Вы на другой странице!" />
+        android:textSize="48sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+        <!-- Элементы тренировок будут добавлены сюда горизонтально -->
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/startStopButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Старт"
+        android:layout_below="@+id/chronometer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:id="@+id/editTextDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Дата"
+        android:layout_below="@+id/startStopButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
+
+    <EditText
+        android:id="@+id/editTextExercise"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Упражнение"
+        android:layout_below="@+id/editTextDate"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp" />
+
+    <EditText
+        android:id="@+id/editTextDuration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Длительность"
+        android:layout_below="@+id/editTextExercise"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/addWorkoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Добавить тренировку"
+        android:layout_below="@+id/editTextDuration"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addWorkoutButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
 
     <Button
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="106dp"
-        android:layout_marginEnd="92dp"
-        android:layout_marginBottom="119dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="95dp"
+        android:layout_marginEnd="102dp"
+        android:layout_marginBottom="12dp"
         android:text="Вернуться в MainActivity" />
+
+    <Button
+        android:id="@+id/resetButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/recyclerView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Сброс" />
 
 </RelativeLayout>

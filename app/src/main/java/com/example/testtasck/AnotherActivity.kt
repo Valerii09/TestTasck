@@ -119,13 +119,15 @@ class AnotherActivity : AppCompatActivity() {
 
             val buttonMain = findViewById<Button>(R.id.backButton)
 
-            buttonMain.setOnClickListener(object : View.OnClickListener {
-                override fun onClick(view: View?) {
-                    val intent = Intent(this@AnotherActivity, MainActivity::class.java)
-                    startActivity(intent)
-                }
-            })
-        }
+        buttonMain.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(view: View?) {
+                val intent = Intent(this@AnotherActivity, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(intent)
+            }
+        })
+
+    }
     }
 
 

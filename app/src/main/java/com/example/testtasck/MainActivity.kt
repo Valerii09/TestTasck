@@ -4,11 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.webkit.WebSettings
@@ -26,6 +28,10 @@ private lateinit var mFirebaseRemoteConfig: FirebaseRemoteConfig
 private lateinit var sharedPrefs: SharedPreferences
 
 class MainActivity : AppCompatActivity() {
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        // Обработка изменения ориентации здесь, если необходимо.
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -35,6 +41,16 @@ class MainActivity : AppCompatActivity() {
         webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
         val webSettings = webView.settings
         webSettings.javaScriptEnabled = true
+
+        webView.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
+                // Если есть история переходов, вернуться на предыдущую страницу
+                webView.goBack()
+                true // Заблокировать обработку события кнопки "назад"
+            } else {
+                false // Разрешить обработку события кнопки "назад" по умолчанию
+            }
+        }
 
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {

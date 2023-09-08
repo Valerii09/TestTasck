@@ -37,7 +37,7 @@ class AnotherActivity : AppCompatActivity() {
         this.recyclerView = findViewById(R.id.recyclerView)
 
 
-        // Инициализируйте элементы интерфейса для ввода данных о тренировке
+        // Инициализация элементов интерфейса для ввода данных о тренировке
         editTextDate = findViewById(R.id.editTextDate)
         editTextExercise = findViewById(R.id.editTextExercise)
         editTextDuration = findViewById(R.id.editTextDuration)
@@ -67,7 +67,7 @@ class AnotherActivity : AppCompatActivity() {
         }
         chronometer.format = "00:%s"
 
-        // Установите базовое значение секундомера в 0
+        // базовое значение секундомера 0
         chronometer.base = SystemClock.elapsedRealtime()
 
         startStopButton.setOnClickListener {
@@ -112,13 +112,6 @@ class AnotherActivity : AppCompatActivity() {
             }
         })
 
-
-
-
-        // Опционально, добавьте новую тренировку в список и обновите RecyclerView
-
-
-            // Добавьте логику для добавления тренировок в workoutList здесь
             // Пример добавления тренировки:
             val workout = Workout("2023-09-10", "Приседания", "30 минут")
             workoutList.add(workout)

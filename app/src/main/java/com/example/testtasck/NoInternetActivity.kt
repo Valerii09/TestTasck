@@ -21,8 +21,7 @@ class NoInternetActivity : AppCompatActivity() {
 
         retryButton.setOnClickListener {
             // Попытка повторного подключения к интернету
-            // Ваш код для проверки доступности интернета и перехода на главный экран при восстановлении соединения
-            // Например:
+            //код для проверки доступности интернета и перехода на главный экран при восстановлении соединения
             if (isInternetAvailable()) {
                 val mainIntent = Intent(this, MainActivity::class.java)
                 startActivity(mainIntent)

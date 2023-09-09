@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class WorkoutAdapter(private val workoutList: List<Workout>) : RecyclerView.Adapter<WorkoutAdapter.ViewHolder>() {
+class WorkoutAdapter(private val workoutList: MutableList<Workout>) : RecyclerView.Adapter<WorkoutAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val dateText: TextView = itemView.findViewById(R.id.dateText)
@@ -25,6 +25,19 @@ class WorkoutAdapter(private val workoutList: List<Workout>) : RecyclerView.Adap
         holder.exerciseText.text = currentItem.exercise
         holder.durationText.text = currentItem.duration
     }
+
+    fun addItemsToTop(items: List<Workout>) {
+        workoutList.addAll(0, items)
+        notifyDataSetChanged()
+    }
+
+    fun removeLastWorkout() {
+        if (workoutList.isNotEmpty()) {
+            workoutList.removeAt(workoutList.size - 1)
+            notifyItemRemoved(workoutList.size)
+        }
+    }
+
 
     override fun getItemCount() = workoutList.size
 }

@@ -1,5 +1,6 @@
 package com.example.testtasck
 
+
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -72,7 +73,6 @@ class MainActivity : AppCompatActivity() {
         webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
         val webSettings = webView.settings
         webSettings.javaScriptEnabled = true
-        webSettings.javaScriptEnabled = true
         webSettings.domStorageEnabled = true
         webSettings.databaseEnabled = true
         webSettings.setSupportZoom(false)
@@ -101,10 +101,6 @@ class MainActivity : AppCompatActivity() {
                 false
             }
         }
-
-
-        // Включение JavaScript
-        webView.settings.javaScriptEnabled = true
 
         // Настройка WebViewClient, чтобы открывать ссылки внутри WebView
         webView.webViewClient = WebViewClient()

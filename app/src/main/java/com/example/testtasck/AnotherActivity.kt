@@ -1,5 +1,6 @@
 package com.example.testtasck
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,9 +12,14 @@ import android.widget.Chronometer
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.example.testtasck.WorkoutAdapter
+
 
 
 class AnotherActivity : AppCompatActivity() {
+
     private lateinit var chronometer: Chronometer
     private lateinit var startStopButton: Button
     private lateinit var resetButton: Button
@@ -30,16 +36,52 @@ class AnotherActivity : AppCompatActivity() {
     private lateinit var editTextDuration: EditText
     private lateinit var addWorkoutButton: Button
 
+    private val sharedPreferences by lazy {
+        getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+    }
+    private fun saveLastWorkout(workout: Workout) {
+        val gson = Gson()
+        val json = gson.toJson(workout)
+        sharedPreferences.edit().putString("lastWorkout", json).apply()
+    }
+
+    private fun saveWorkoutList() {
+        val gson = Gson()
+        val json = gson.toJson(workoutList)
+        sharedPreferences.edit().putString("workoutList", json).apply()
+    }
+
+    private fun removeLastWorkout() {
+        if (workoutList.isNotEmpty()) {
+            workoutList.removeAt(workoutList.size - 1)
+            workoutAdapter.notifyItemRemoved(workoutList.size)
+            saveWorkoutList()
+        }
+    }
+
+    private fun loadWorkoutList() {
+        val json = sharedPreferences.getString("workoutList", null)
+        if (!json.isNullOrBlank()) {
+            val gson = Gson()
+            val type = object : TypeToken<MutableList<Workout>>() {}.type
+            workoutList.clear()
+            workoutList.addAll(gson.fromJson(json, type))
+            workoutAdapter.notifyDataSetChanged()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_another)
 
+        val deleteLastWorkoutButton = findViewById<Button>(R.id.deleteLastWorkoutButton)
+        deleteLastWorkoutButton.setOnClickListener {
+            removeLastWorkout()
+        }
 
         chronometer = findViewById(R.id.chronometer)
-        this.recyclerView = findViewById(R.id.recyclerView)
+        recyclerView = findViewById(R.id.recyclerView)
 
-
-        // Инициализация элементов интерфейса для ввода данных о тренировке
         editTextDate = findViewById(R.id.editTextDate)
         editTextExercise = findViewById(R.id.editTextExercise)
         editTextDuration = findViewById(R.id.editTextDuration)
@@ -51,6 +93,8 @@ class AnotherActivity : AppCompatActivity() {
         recyclerView.adapter = workoutAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
+        loadWorkoutList() // Загрузить сохраненный список тренировок
+
         addWorkoutButton.setOnClickListener {
             val date = editTextDate.text.toString()
             val exercise = editTextExercise.text.toString()
@@ -59,9 +103,14 @@ class AnotherActivity : AppCompatActivity() {
             if (date.isNotBlank() && exercise.isNotBlank() && duration.isNotBlank()) {
                 val workout = Workout(date, exercise, duration)
                 workoutList.add(workout)
+                saveWorkoutList() // Сохранить обновленный список
                 workoutAdapter.notifyDataSetChanged()
 
-                // Очистите поля ввода
+                val lastWorkout = workoutList.lastOrNull()
+                if (lastWorkout != null) {
+                    saveLastWorkout(lastWorkout)
+                }
+
                 editTextDate.text.clear()
                 editTextExercise.text.clear()
                 editTextDuration.text.clear()
@@ -81,7 +130,8 @@ class AnotherActivity : AppCompatActivity() {
                 if (startTimeMillis == 0L) {
                     startTimeMillis = SystemClock.elapsedRealtime()
                 }
-                chronometer.base = SystemClock.elapsedRealtime() - (SystemClock.elapsedRealtime() - startTimeMillis)
+                chronometer.base =
+                    SystemClock.elapsedRealtime() - (SystemClock.elapsedRealtime() - startTimeMillis)
                 chronometer.start()
                 isRunning = true
                 startStopButton.text = "Стоп"
@@ -106,7 +156,12 @@ class AnotherActivity : AppCompatActivity() {
                     val elapsedMillis = SystemClock.elapsedRealtime() - chronometer.base
                     val tenths = (elapsedMillis % 1000)
                     if (tenths != lastTenths.toLong()) {
-                        chronometer.text = String.format("%02d:%02d.%d", elapsedMillis / 60000, (elapsedMillis % 60000) / 1000, tenths)
+                        chronometer.text = String.format(
+                            "%02d:%02d.%d",
+                            elapsedMillis / 60000,
+                            (elapsedMillis % 60000) / 1000,
+                            tenths
+                        )
                         lastTenths = tenths.toInt()
                     }
                 }
@@ -114,12 +169,14 @@ class AnotherActivity : AppCompatActivity() {
             }
         })
 
-            // Пример добавления тренировки:
-            val workout = Workout("2023-09-10", "Приседания", "30 минут")
-            workoutList.add(workout)
-            workoutAdapter.notifyDataSetChanged() // Обновить RecyclerView
+        // Пример добавления тренировки:
+        val workout = Workout("2023-09-10", "Приседания", "30 минут")
+        workoutList.add(workout)
+        workoutAdapter.notifyDataSetChanged() // Обновить RecyclerView
 
-            val buttonMain = findViewById<Button>(R.id.backButton)
+
+
+        val buttonMain = findViewById<Button>(R.id.backButton)
 
         buttonMain.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View?) {
@@ -130,6 +187,6 @@ class AnotherActivity : AppCompatActivity() {
         })
 
     }
-    }
+}
 
 

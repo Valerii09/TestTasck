@@ -14,9 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.example.testtasck.WorkoutAdapter
-
-
 
 class AnotherActivity : AppCompatActivity() {
 
@@ -39,18 +36,28 @@ class AnotherActivity : AppCompatActivity() {
     private val sharedPreferences by lazy {
         getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
     }
+    /**
+     * Сохраняет последнюю тренировку в SharedPreferences.
+     */
     private fun saveLastWorkout(workout: Workout) {
         val gson = Gson()
         val json = gson.toJson(workout)
         sharedPreferences.edit().putString("lastWorkout", json).apply()
     }
-
+    /**
+     * Сохраняет список тренировок в SharedPreferences.
+     */
     private fun saveWorkoutList() {
         val gson = Gson()
         val json = gson.toJson(workoutList)
         sharedPreferences.edit().putString("workoutList", json).apply()
     }
-
+    /**
+     * Удаляет последнюю тренировку из списка тренировок.
+     * Если список тренировок не пустой, удаляется последний элемент,
+     * и обновляется адаптер для отображения изменений.
+     * Затем список тренировок сохраняется в SharedPreferences.
+     */
     private fun removeLastWorkout() {
         if (workoutList.isNotEmpty()) {
             workoutList.removeAt(workoutList.size - 1)
@@ -58,7 +65,14 @@ class AnotherActivity : AppCompatActivity() {
             saveWorkoutList()
         }
     }
-
+    /**
+     * Загружает список тренировок из SharedPreferences.
+     * Если в SharedPreferences есть сохраненный список тренировок,
+     * он извлекается, десериализуется с помощью библиотеки Gson,
+     * и затем загружается в список тренировок workoutList.
+     * После этого вызывается метод notifyDataSetChanged() адаптера,
+     * чтобы обновить отображение изменений.
+     */
     private fun loadWorkoutList() {
         val json = sharedPreferences.getString("workoutList", null)
         if (!json.isNullOrBlank()) {
@@ -95,6 +109,14 @@ class AnotherActivity : AppCompatActivity() {
 
         loadWorkoutList() // Загрузить сохраненный список тренировок
 
+        /**
+         * Обработчик нажатия на кнопку "Добавить тренировку".
+         * Извлекает значения из текстовых полей даты, упражнения и длительности.
+         * Если все поля не пустые, создает объект тренировки и добавляет его в список тренировок.
+         * Затем сохраняет обновленный список тренировок в SharedPreferences,
+         * обновляет адаптер для отображения изменений и сохраняет последнюю тренировку.
+         * Очищает текстовые поля после добавления тренировки.
+         */
         addWorkoutButton.setOnClickListener {
             val date = editTextDate.text.toString()
             val exercise = editTextExercise.text.toString()
@@ -121,6 +143,11 @@ class AnotherActivity : AppCompatActivity() {
         // базовое значение секундомера 0
         chronometer.base = SystemClock.elapsedRealtime()
 
+        /**
+         * Обработчик нажатия на кнопку "Старт/Стоп".
+         * Если секундомер запущен, останавливает его и обновляет состояние кнопки.
+         * Если секундомер остановлен, запускает его с текущим временем и обновляет состояние кнопки.
+         */
         startStopButton.setOnClickListener {
             if (isRunning) {
                 chronometer.stop()
@@ -178,6 +205,10 @@ class AnotherActivity : AppCompatActivity() {
 
         val buttonMain = findViewById<Button>(R.id.backButton)
 
+        /**
+         * Создает и запускает явный интент для перехода на активность MainActivity.
+         * Устанавливает флаги Intent.FLAG_ACTIVITY_CLEAR_TOP и Intent.FLAG_ACTIVITY_SINGLE_TOP,
+         */
         buttonMain.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View?) {
                 val intent = Intent(this@AnotherActivity, MainActivity::class.java)

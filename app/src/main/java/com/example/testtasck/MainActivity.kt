@@ -1,6 +1,5 @@
 package com.example.testtasck
 
-
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -8,7 +7,6 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -23,17 +21,17 @@ import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import org.json.JSONObject
 
-private val FILE_PICKER_REQUEST_CODE = 123
+private const val FILE_PICKER_REQUEST_CODE = 123
+
 private lateinit var mFirebaseRemoteConfig: FirebaseRemoteConfig
 private lateinit var sharedPrefs: SharedPreferences
 
-@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         // Обработка изменения ориентации здесь, если необходимо.
@@ -48,8 +46,6 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-
-
         if (isNetworkAvailable()) {
             // Интернет доступен, выполните действия, которые требуют интернет-соединения
         } else {
@@ -58,14 +54,9 @@ class MainActivity : AppCompatActivity() {
             finish() // Завершаем текущую активность
         }
 
-
         val webView = findViewById<WebView>(R.id.webView)
 
         // Настройки WebView
-
-
-
-        // Настройки CookieManager
         val cookieManager = CookieManager.getInstance()
         cookieManager.setAcceptCookie(true)
 
@@ -108,7 +99,6 @@ class MainActivity : AppCompatActivity() {
         // Загрузка локальной HTML-страницы (local_page.html) из assets
         webView.loadUrl("file:///android_asset/local_page.html")
 
-
         // Инициализация Firebase Remote Config
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         val configSettings = FirebaseRemoteConfigSettings.Builder()
@@ -139,27 +129,17 @@ class MainActivity : AppCompatActivity() {
                             .addOnCompleteListener(this) { task ->
                                 if (task.isSuccessful) {
                                     val url = mFirebaseRemoteConfig.getString("url")
-                                    Log.d(
-                                        "MainActivity",
-                                        "Получена ссылка из Firebase Remote Config: $url"
-                                    )
+                                    Log.d("MainActivity", "Получена ссылка из Firebase Remote Config: $url")
                                 }
                                 // Проверяем условия
                                 if (url.isEmpty() || isGoogleDevice(url) || isEmulator(url)) {
                                     // Открываем заглушку (AnotherActivity)
-                                    val intent =
-                                        Intent(this@MainActivity, AnotherActivity::class.java)
+                                    val intent = Intent(this@MainActivity, AnotherActivity::class.java)
                                     startActivity(intent)
-                                    Log.d(
-                                        "MainActivity",
-                                        "Нажата кнопка для перехода на AnotherActivity"
-                                    )
+                                    Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
                                 } else {
                                     // Открываем страницу с полученной ссылкой
-                                    Log.d(
-                                        "MainActivity",
-                                        "Условие не пройдено"
-                                    )
+                                    Log.d("MainActivity", "Условие не пройдено")
                                     // Проверка, есть ли на устройстве приложение для открытия ссылок
                                     val initialSearchQuery = JSONObject(url).getString("url")
                                     searchEditText.setText(initialSearchQuery)
@@ -176,7 +156,6 @@ class MainActivity : AppCompatActivity() {
                                             false
                                         }
                                     }
-
                                 }
                             }
                     }
@@ -185,7 +164,6 @@ class MainActivity : AppCompatActivity() {
             showErrorScreen()
             Log.e("MainActivity", "Ошибка при обработке Firebase Remote Config: ${e.message}")
         }
-
 
         val buttonMain = findViewById<Button>(R.id.button_main)
 
@@ -199,11 +177,9 @@ class MainActivity : AppCompatActivity() {
                     Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
                 }
             })
-
     }
 
-// Функция для проверки, что это устройство Google
-
+    // Функция для проверки, что это устройство Google
     private fun isGoogleDevice(url: String): Boolean {
         Log.d("MainActivity", "isGoogle:")
         return url.contains("google")
@@ -241,4 +217,3 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-

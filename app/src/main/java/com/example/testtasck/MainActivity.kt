@@ -8,7 +8,6 @@ import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -22,20 +21,22 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import org.json.JSONObject
 
-private const val FILE_PICKER_REQUEST_CODE = 123 // Код запроса для выбора файла
+private const val FILE_PICKER_REQUEST_CODE = 123
 
-private lateinit var mFirebaseRemoteConfig: FirebaseRemoteConfig // Инициализация Firebase Remote Config
-private lateinit var sharedPrefs: SharedPreferences // Инициализация SharedPreferences
+private lateinit var mFirebaseRemoteConfig: FirebaseRemoteConfig
+private lateinit var sharedPrefs: SharedPreferences
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var originalWebView: WebView
+    private lateinit var webView: ScrollableWebView
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        // Обработка изменения ориентации, если необходимо.
+        // Обработка изменения ориентации здесь, если необходимо.
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,8 +46,6 @@ class MainActivity : AppCompatActivity() {
         // Установка темы обратно на основную тему после отображения сплэш-экрана
         setTheme(R.style.SplashTheme)
 
-        setContentView(R.layout.activity_main)
-
         if (isNetworkAvailable()) {
             // Интернет доступен, выполните действия, которые требуют интернет-соединения
         } else {
@@ -55,7 +54,8 @@ class MainActivity : AppCompatActivity() {
             finish() // Завершаем текущую активность
         }
 
-        val webView = findViewById<WebView>(R.id.webView)
+        originalWebView = findViewById(R.id.webView)
+        webView = findViewById(R.id.webView)
 
         // Настройки WebView
         val cookieManager = CookieManager.getInstance()
@@ -73,7 +73,6 @@ class MainActivity : AppCompatActivity() {
         webSettings.loadWithOverviewMode = true
         webSettings.useWideViewPort = true
 
-        // Устанавливаем обработчик кнопки "назад" в WebView
         webView.setOnKeyListener { _, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
                 // Если есть история переходов, вернуться на предыдущую страницу
@@ -84,7 +83,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Устанавливаем обработчик действия при поиске в EditText
         searchEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val searchText = searchEditText.text.toString()
@@ -109,10 +107,7 @@ class MainActivity : AppCompatActivity() {
             .build()
         mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings)
 
-        // Инициализация SharedPreferences
         sharedPrefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-
-        // Пытаемся получить сохраненную ссылку из SharedPreferences
         val savedUrl = sharedPrefs.getString("savedUrl", "")
 
         if (savedUrl != null) {
@@ -120,16 +115,8 @@ class MainActivity : AppCompatActivity() {
                 // Если сохраненная ссылка есть, используем ее
                 searchEditText.setText(savedUrl)
                 webView.loadUrl(savedUrl)
-
-                // Проверяем условия для сохраненной ссылки
-                if (isGoogleDevice(savedUrl) || isEmulator(savedUrl)) {
-                    // Открываем заглушку (AnotherActivity)
-                    val intent = Intent(this@MainActivity, AnotherActivity::class.java)
-                    startActivity(intent)
-                    Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
-                }
             } else {
-                // Если сохраненной ссылки нет, выполняем запрос на получение данных из Firebase Remote Config
+                // Пытаемся получить сохраненную ссылку из SharedPreferences
                 try {
                     // Выполняем запрос на получение данных
                     mFirebaseRemoteConfig.fetchAndActivate()
@@ -142,13 +129,18 @@ class MainActivity : AppCompatActivity() {
                                     putString("savedUrl", url)
                                     apply()
                                 }
-
                                 // Проверяем условия
                                 if (url.isEmpty() || isGoogleDevice(url) || isEmulator(url)) {
                                     // Открываем заглушку (AnotherActivity)
-                                    val intent = Intent(this@MainActivity, AnotherActivity::class.java)
+                                    val intent = Intent(
+                                        this@MainActivity,
+                                        AnotherActivity::class.java
+                                    )
                                     startActivity(intent)
-                                    Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
+                                    Log.d(
+                                        "MainActivity",
+                                        "Нажата кнопка для перехода на AnotherActivity"
+                                    )
                                 } else {
                                     // Открываем страницу с полученной ссылкой
                                     Log.d("MainActivity", "Условие не пройдено")
@@ -160,27 +152,28 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         }
+
                 } catch (e: Exception) {
                     showErrorScreen()
                     Log.e("MainActivity", "Ошибка при обработке Firebase Remote Config: ${e.message}")
                 }
             }
         }
-
         val buttonMain = findViewById<Button>(R.id.button_main)
 
         Log.d("MainActivity", "Activity создана")
 
-        // Устанавливаем обработчик клика на кнопку "Перейти на другую страницу"
-        buttonMain.setOnClickListener {
-            val intent = Intent(this@MainActivity, AnotherActivity::class.java)
-            startActivity(intent)
-            Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
-        }
+        buttonMain.setOnClickListener(
+            object : View.OnClickListener {
+                override fun onClick(view: View?) {
+                    val intent = Intent(this@MainActivity, AnotherActivity::class.java)
+                    startActivity(intent)
+                    Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
+                }
+            })
 
         val buttonClearSavedUrl = findViewById<Button>(R.id.button_clear_saved_url)
 
-        // Устанавливаем обработчик клика на кнопку "Очистить сохраненную ссылку"
         buttonClearSavedUrl.setOnClickListener {
             clearSavedUrl()
         }
@@ -192,13 +185,11 @@ class MainActivity : AppCompatActivity() {
         return url.contains("google")
     }
 
-    // Функция для проверки, что это эмулятор
     private fun isEmulator(url: String): Boolean {
         Log.d("MainActivity", "isEmulator:")
         return !url.isNotEmpty() || Build.FINGERPRINT.startsWith("generic")
     }
 
-    // Функция для проверки доступности сети
     private fun isNetworkAvailable(): Boolean {
         val connectivityManager =
             getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -206,7 +197,6 @@ class MainActivity : AppCompatActivity() {
         return networkInfo?.isConnectedOrConnecting == true
     }
 
-    // Функция для удаления сохраненной ссылки
     fun clearSavedUrl() {
         // Получаем доступ к SharedPreferences
         val sharedPrefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
@@ -228,7 +218,6 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Сохраненная ссылка удалена", Toast.LENGTH_SHORT).show()
     }
 
-    // Функция для отображения экрана ошибки
     private fun showErrorScreen() {
         setContentView(R.layout.activity_no_internet)
         val errorMessageTextView = findViewById<TextView>(R.id.textViewNoInternet)
@@ -249,4 +238,3 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-

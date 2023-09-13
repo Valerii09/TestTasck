@@ -113,51 +113,45 @@ class MainActivity : AppCompatActivity() {
 
         val savedUrl = sharedPrefs.getString("savedUrl", "")
 
-        if (savedUrl != null) {
-            if (savedUrl.isNotEmpty()) {
-                // Если сохраненная ссылка есть, и она не пустая, открываем AnotherActivity
-                val intent = Intent(this@MainActivity, AnotherActivity::class.java)
-                startActivity(intent)
-                Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
-            } else {
-                // Пытаемся получить сохраненную ссылку из SharedPreferences
-                try {
-                    // Выполняем запрос на получение данных
-                    mFirebaseRemoteConfig.fetchAndActivate()
-                        .addOnCompleteListener(this) { task ->
-                            if (task.isSuccessful) {
-                                val url = mFirebaseRemoteConfig.getString("url")
+        if (savedUrl != null && savedUrl.isNotEmpty()) {
+            // Если сохраненная ссылка есть и не пустая, открываем ее в WebView
+            // и больше не проверяем условия
+            webView.loadUrl(savedUrl)
+            Log.d("MainActivity", "Открываем сохраненную ссылку в WebView")
+        } else {
+            // Пытаемся получить ссылку из Firebase Remote Config
+            try {
+                // Выполняем запрос на получение данных
+                mFirebaseRemoteConfig.fetchAndActivate()
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            val url = mFirebaseRemoteConfig.getString("url")
 
-                                // Проверяем условия
-                                if (url.isEmpty() || isGoogleDevice(url) || isEmulator(url)) {
-                                    // Сохраняем полученную ссылку в SharedPreferences
-                                    with(sharedPrefs.edit()) {
-                                        putString("savedUrl", url)
-                                        apply()
-                                    }
-                                    // Открываем заглушку (AnotherActivity)
-                                    val intent = Intent(this@MainActivity, AnotherActivity::class.java)
-                                    startActivity(intent)
-                                    Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
-                                } else {
-                                    // Остальной код для обработки ссылки...
-                                    Log.d("MainActivity", "Условие не пройдено")
-                                    // Устанавливаем полученную ссылку в EditText
-                                    searchEditText.setText(url)
-                                    // Загружаем страницу с этой ссылкой
-                                    webView.loadUrl(url)
-                                    // Другие действия по обработке ссылки...
+                            // Проверяем условие
+                            if (url.isNotEmpty() && !isGoogleDevice(url) && !isEmulator(url)) {
+                                // Сохраняем полученную ссылку в SharedPreferences
+                                with(sharedPrefs.edit()) {
+                                    putString("savedUrl", url)
+                                    apply()
                                 }
+
+                                // Открываем ссылку в WebView
+                                webView.loadUrl(url)
+                                Log.d("MainActivity", "Открываем ссылку в WebView")
+                            } else {
+                                // Открываем заглушку (AnotherActivity)
+                                val intent = Intent(this@MainActivity, AnotherActivity::class.java)
+                                startActivity(intent)
+                                Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
                             }
                         }
-                } catch (e: Exception) {
-                    showErrorScreen()
-                    Log.e("MainActivity", "Ошибка при обработке Firebase Remote Config: ${e.message}")
-                }
+                    }
+            } catch (e: Exception) {
+                showErrorScreen()
+                Log.e("MainActivity", "Ошибка при обработке Firebase Remote Config: ${e.message}")
             }
-        } else {
-            // Обработка случая, когда savedUrl равно null
         }
+
 
 
 

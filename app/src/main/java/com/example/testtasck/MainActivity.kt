@@ -107,14 +107,18 @@ class MainActivity : AppCompatActivity() {
             .build()
         mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings)
 
+
+
         sharedPrefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+
         val savedUrl = sharedPrefs.getString("savedUrl", "")
 
         if (savedUrl != null) {
             if (savedUrl.isNotEmpty()) {
-                // Если сохраненная ссылка есть, используем ее
-                searchEditText.setText(savedUrl)
-                webView.loadUrl(savedUrl)
+                // Если сохраненная ссылка есть, и она не пустая, открываем AnotherActivity
+                val intent = Intent(this@MainActivity, AnotherActivity::class.java)
+                startActivity(intent)
+                Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
             } else {
                 // Пытаемся получить сохраненную ссылку из SharedPreferences
                 try {
@@ -124,25 +128,19 @@ class MainActivity : AppCompatActivity() {
                             if (task.isSuccessful) {
                                 val url = mFirebaseRemoteConfig.getString("url")
 
-                                // Сохраняем полученную ссылку в SharedPreferences
-                                with(sharedPrefs.edit()) {
-                                    putString("savedUrl", url)
-                                    apply()
-                                }
                                 // Проверяем условия
                                 if (url.isEmpty() || isGoogleDevice(url) || isEmulator(url)) {
+                                    // Сохраняем полученную ссылку в SharedPreferences
+                                    with(sharedPrefs.edit()) {
+                                        putString("savedUrl", url)
+                                        apply()
+                                    }
                                     // Открываем заглушку (AnotherActivity)
-                                    val intent = Intent(
-                                        this@MainActivity,
-                                        AnotherActivity::class.java
-                                    )
+                                    val intent = Intent(this@MainActivity, AnotherActivity::class.java)
                                     startActivity(intent)
-                                    Log.d(
-                                        "MainActivity",
-                                        "Нажата кнопка для перехода на AnotherActivity"
-                                    )
+                                    Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
                                 } else {
-                                    // Открываем страницу с полученной ссылкой
+                                    // Остальной код для обработки ссылки...
                                     Log.d("MainActivity", "Условие не пройдено")
                                     // Устанавливаем полученную ссылку в EditText
                                     searchEditText.setText(url)
@@ -152,13 +150,18 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         }
-
                 } catch (e: Exception) {
                     showErrorScreen()
                     Log.e("MainActivity", "Ошибка при обработке Firebase Remote Config: ${e.message}")
                 }
             }
+        } else {
+            // Обработка случая, когда savedUrl равно null
         }
+
+
+
+
         val buttonMain = findViewById<Button>(R.id.button_main)
 
         Log.d("MainActivity", "Activity создана")

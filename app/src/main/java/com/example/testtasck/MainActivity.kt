@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                 } catch (e: Exception) {
-                    showErrorScreen()
+                    showErrorScreenWithMessage("Failed to fetch data. Please check your network connection.")
                     Log.e("MainActivity", "Ошибка при обработке Firebase Remote Config: ${e.message}")
                 }
             } else {
@@ -189,7 +189,7 @@ class MainActivity : AppCompatActivity() {
         if (webView.canGoBack()) {
             webView.goBack() // Вернуться по истории браузера, если возможно
         } else {
-            // Кнопка "Назад" заблокирована, вы можете вывести сообщение или сделать другие действия по вашему выбору
+            // Кнопка "Назад" заблокирована
             Toast.makeText(this, "Нельзя вернуться назад", Toast.LENGTH_SHORT).show()
         }
     }
@@ -233,14 +233,10 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Сохраненная ссылка удалена", Toast.LENGTH_SHORT).show()
     }
 
-    private fun showErrorScreen() {
-        setContentView(R.layout.activity_no_internet)
-        val errorMessageTextView = findViewById<TextView>(R.id.textViewNoInternet)
-        errorMessageTextView.setOnClickListener {
-            val intent = Intent(this@MainActivity, NoInternetActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
+    fun showErrorScreenWithMessage(errorMessage: String) {
+        val errorIntent = Intent(this, NoInternetActivity::class.java)
+        errorIntent.putExtra("message", errorMessage)
+        startActivity(errorIntent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

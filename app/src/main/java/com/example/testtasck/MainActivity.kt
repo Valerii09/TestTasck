@@ -150,19 +150,26 @@ class MainActivity : AppCompatActivity() {
                                     startActivity(intent)
                                     Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
                                 }
+                            } else {
+                                showToast("Failed to fetch data. Please check your network connection.")
+                                // Если не удалось получить данные из Firebase Remote Config, показываем ошибку
+                                showErrorScreenWithMessage("Failed to fetch data. Please check your network connection.")
+                                Log.e("MainActivity", "Ошибка при обработке Firebase Remote Config: ${task.exception?.message}")
                             }
                         }
                 } catch (e: Exception) {
+                    showToast("Failed to fetch data. Please check your network connection.")
                     showErrorScreenWithMessage("Failed to fetch data. Please check your network connection.")
                     Log.e("MainActivity", "Ошибка при обработке Firebase Remote Config: ${e.message}")
                 }
             } else {
-                // Нет интернета и нет сохраненной ссылки, открываем AnotherActivity
-                val intent = Intent(this@MainActivity, AnotherActivity::class.java)
-                startActivity(intent)
+                showToast("Failed to fetch data. Please check your network connection.")
+                // Нет интернета и нет сохраненной ссылки, показываем ошибку
+                showErrorScreenWithMessage("Failed to fetch data. Please check your network connection.")
                 Log.d("MainActivity", "Нет интернета и нет сохраненной ссылки, переход на AnotherActivity")
             }
         }
+
 
 
 
@@ -193,7 +200,9 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Нельзя вернуться назад", Toast.LENGTH_SHORT).show()
         }
     }
-
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
     // Функция для проверки, что это устройство Google
     private fun isGoogleDevice(url: String): Boolean {
         Log.d("MainActivity", "isGoogle:")

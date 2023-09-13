@@ -119,41 +119,49 @@ class MainActivity : AppCompatActivity() {
             webView.loadUrl(savedUrl)
             Log.d("MainActivity", "Открываем сохраненную ссылку в WebView")
         } else {
-            // Пытаемся получить ссылку из Firebase Remote Config
-            try {
-                // Выполняем запрос на получение данных
-                mFirebaseRemoteConfig.fetchAndActivate()
-                    .addOnCompleteListener(this) { task ->
-                        if (task.isSuccessful) {
-                            val url = mFirebaseRemoteConfig.getString("url")
+            // Проверяем доступность сети
+            val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val networkInfo = connectivityManager.activeNetworkInfo
 
-                            // Проверяем условие
-                            if (url.isNotEmpty() && !isGoogleDevice(url) && !isEmulator(url)) {
-                                // Сохраняем полученную ссылку в SharedPreferences
-                                with(sharedPrefs.edit()) {
-                                    putString("savedUrl", url)
-                                    apply()
+            if (networkInfo != null && networkInfo.isConnected) {
+                // Пытаемся получить ссылку из Firebase Remote Config
+                try {
+                    // Выполняем запрос на получение данных
+                    mFirebaseRemoteConfig.fetchAndActivate()
+                        .addOnCompleteListener(this) { task ->
+                            if (task.isSuccessful) {
+                                val url = mFirebaseRemoteConfig.getString("url")
+
+                                // Проверяем условие
+                                if (url.isNotEmpty() && !isGoogleDevice(url) && !isEmulator(url)) {
+                                    // Сохраняем полученную ссылку в SharedPreferences
+                                    with(sharedPrefs.edit()) {
+                                        putString("savedUrl", url)
+                                        apply()
+                                    }
+
+                                    // Открываем ссылку в WebView
+                                    webView.loadUrl(url)
+                                    Log.d("MainActivity", "Открываем ссылку в WebView")
+                                } else {
+                                    // Открываем заглушку (AnotherActivity)
+                                    val intent = Intent(this@MainActivity, AnotherActivity::class.java)
+                                    startActivity(intent)
+                                    Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
                                 }
-
-                                // Открываем ссылку в WebView
-                                webView.loadUrl(url)
-                                Log.d("MainActivity", "Открываем ссылку в WebView")
-                            } else {
-                                // Открываем заглушку (AnotherActivity)
-                                val intent = Intent(this@MainActivity, AnotherActivity::class.java)
-                                startActivity(intent)
-                                Log.d("MainActivity", "Нажата кнопка для перехода на AnotherActivity")
                             }
                         }
-                    }
-            } catch (e: Exception) {
-                showErrorScreen()
-                Log.e("MainActivity", "Ошибка при обработке Firebase Remote Config: ${e.message}")
+                } catch (e: Exception) {
+                    showErrorScreen()
+                    Log.e("MainActivity", "Ошибка при обработке Firebase Remote Config: ${e.message}")
+                }
+            } else {
+                // Нет интернета и нет сохраненной ссылки, открываем AnotherActivity
+                val intent = Intent(this@MainActivity, AnotherActivity::class.java)
+                startActivity(intent)
+                Log.d("MainActivity", "Нет интернета и нет сохраненной ссылки, переход на AnotherActivity")
             }
         }
-
-
-
 
 
         val buttonMain = findViewById<Button>(R.id.button_main)

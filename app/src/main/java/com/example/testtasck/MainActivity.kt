@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         // Настройки WebView
         val cookieManager = CookieManager.getInstance()
         cookieManager.setAcceptCookie(true)
+        cookieManager.setAcceptThirdPartyCookies(webView, true)
 
         val searchEditText = findViewById<EditText>(R.id.searchEditText)
         webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
@@ -164,6 +165,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+
         val buttonMain = findViewById<Button>(R.id.button_main)
 
         Log.d("MainActivity", "Activity создана")
@@ -181,6 +183,14 @@ class MainActivity : AppCompatActivity() {
 
         buttonClearSavedUrl.setOnClickListener {
             clearSavedUrl()
+        }
+    }
+    override fun onBackPressed() {
+        if (webView.canGoBack()) {
+            webView.goBack() // Вернуться по истории браузера, если возможно
+        } else {
+            // Кнопка "Назад" заблокирована, вы можете вывести сообщение или сделать другие действия по вашему выбору
+            Toast.makeText(this, "Нельзя вернуться назад", Toast.LENGTH_SHORT).show()
         }
     }
 

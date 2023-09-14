@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 2 -> {
                     Log.d("FlagTriggered", "Flag 2 сработал")
-                    openWebViewActivity()
+                    openAnotherActivity()
                 }
                 3 -> {
                     Log.d("FlagTriggered", "Flag 3 сработал")

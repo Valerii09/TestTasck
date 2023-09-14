@@ -27,7 +27,7 @@
             android:layout_marginStart="13dp"
             android:layout_marginTop="14dp"
             android:layout_toEndOf="@+id/addWorkoutButton"
-            android:text="Удалить последнюю тренировку" />
+            android:text="Delete last workout" />
 
         <Chronometer
             android:id="@+id/chronometer"
@@ -53,7 +53,7 @@
             android:layout_below="@+id/chronometer"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:text="Старт" />
+            android:text="Start" />
 
         <EditText
             android:id="@+id/editTextDate"
@@ -62,7 +62,7 @@
             android:layout_below="@+id/startStopButton"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:hint="Дата" />
+            android:hint="Date" />
 
         <EditText
             android:id="@+id/editTextExercise"
@@ -71,7 +71,7 @@
             android:layout_below="@+id/editTextDate"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
-            android:hint="Упражнение" />
+            android:hint="Exercise" />
 
         <EditText
             android:id="@+id/editTextDuration"
@@ -80,7 +80,7 @@
             android:layout_below="@+id/editTextExercise"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
-            android:hint="Длительность" />
+            android:hint="Duration" />
 
 
         <Button
@@ -91,7 +91,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="4dp"
             android:layout_marginTop="16dp"
-            android:text="Добавить тренировку" />
+            android:text="Add a workout" />
 
         <Button
             android:id="@+id/backButton"
@@ -115,7 +115,7 @@
             android:layout_below="@+id/recyclerView"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:text="Сброс" />
+            android:text="Reset" />
 
     </RelativeLayout>
 </ScrollView>

@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_webview)
 
+
         // Проверяем доступность сети
         if (isNetworkAvailable()) {
             initializeFirebaseRemoteConfig()
@@ -37,10 +38,12 @@ class MainActivity : AppCompatActivity() {
         val savedUrl = sharedPrefs.getString("savedUrl", "")
 
         if (savedUrl.isNullOrEmpty()) {
-            // Если сохраненная ссылка отсутствует или пустая, открываем AnotherActivity
-            openAnotherActivity()
-        } else {
             processRemoteConfigData()
+            // Если сохраненная ссылка отсутствует или пустая, открываем AnotherActivity
+            Log.d("MainActivity", "ссылка пустая")
+
+        } else {
+            openWebViewActivity()
         }
     }
 
@@ -59,16 +62,17 @@ class MainActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         val url = mFirebaseRemoteConfig.getString("url")
+                        Log.d("MainActivity", "Значение URL из Remote Config: $url")
 
-                        if (url.isNotEmpty() || isGoogleDevice(url) || isEmulator(url)) {
+                        if (url.isEmpty() || isGoogleDevice(url) || isEmulator(url)) {
                             openAnotherActivity()
-
+                            Log.d("MainActivity", "прошла условие Значение URL из Remote Config: $url")
                         } else {
                             with(sharedPrefs.edit()) {
                                 putString("savedUrl", url)
                                 apply()
                             }
-                            openAnotherActivity()
+                            openWebViewActivity()
                         }
                     } else {
                         handleFetchFailure()
@@ -84,6 +88,12 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
         Log.d("MainActivity", "Первый запуск приложения, открываем AnotherActivity")
     }
+    private fun openWebViewActivity() {
+        val intent = Intent(this@MainActivity, WebViewActivity::class.java)
+        startActivity(intent)
+        Log.d("MainActivity", "Первый запуск приложения, открываем AnotherActivity")
+    }
+
 
     private fun handleFetchFailure() {
         showToast("Failed to fetch data. Please check your network connection.")

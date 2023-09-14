@@ -26,8 +26,8 @@ class WebViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_webview) // Убедитесь, что макет правильно установлен
-
+        setContentView(R.layout.activity_webview)
+        webView = findViewById(R.id.webView)
         sharedPrefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
 
         // Получаем экземпляр CookieManager для управления куками
@@ -104,6 +104,8 @@ class WebViewActivity : AppCompatActivity() {
         }
 
         // Обработка нажатия кнопки "Очистить сохраненную ссылку"
+
+
         buttonClearSavedUrl.setOnClickListener {
             clearSavedUrl()
         }
@@ -134,15 +136,25 @@ class WebViewActivity : AppCompatActivity() {
 
     // Функция для удаления сохраненной ссылки из SharedPreferences
     fun clearSavedUrl() {
-        val editor = sharedPrefs.edit()
-        editor.remove("savedUrl")
-        editor.apply()
+        val savedUrl = sharedPrefs.getString("savedUrl", "")
 
-        // Очистка текста в EditText
-        val searchEditText = findViewById<EditText>(R.id.searchEditText)
-        searchEditText.text.clear()
+        if (savedUrl.isNullOrEmpty()) {
+            // Локальная ссылка пуста или отсутствует
+            Log.d("MainActivity", "Локальная ссылка пуста или отсутствует.")
+            Toast.makeText(this, "Локальная ссылка отсутствует.", Toast.LENGTH_SHORT).show()
+        } else {
+            // Удаляем сохраненную ссылку
+            val editor = sharedPrefs.edit()
+            editor.remove("savedUrl")
+            editor.apply()
 
-        // Оповещение пользователя о удалении сохраненной ссылки
-        Toast.makeText(this, "Сохраненная ссылка удалена", Toast.LENGTH_SHORT).show()
+            // Очищаем текст в EditText
+            val searchEditText = findViewById<EditText>(R.id.searchEditText)
+            searchEditText.text.clear()
+
+            // Оповещение пользователя о удалении сохраненной ссылки
+            Toast.makeText(this, "Сохраненная ссылка удалена", Toast.LENGTH_SHORT).show()
+        }
     }
+
 }

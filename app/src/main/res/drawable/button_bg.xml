@@ -3,13 +3,13 @@
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <corners android:radius="8dp" />
-            <solid android:color="#FF5722" /> <!-- Цвет при нажатии -->
+            <solid android:color="#dedede" /> <!-- Цвет при нажатии -->
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="8dp" />
-            <solid android:color="#FF9800" /> <!-- Цвет по умолчанию -->
+            <solid android:color="#292929" /> <!-- Цвет по умолчанию -->
         </shape>
     </item>
 </selector>

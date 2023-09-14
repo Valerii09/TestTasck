@@ -1,0 +1,17 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Основной прогресс-бар (белый цвет) -->
+    <item android:id="@android:id/background">
+        <shape>
+            <solid android:color="#ffffff" /> <!-- Белый цвет -->
+        </shape>
+    </item>
+
+    <!-- Заполненная часть прогресс-бара  -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <solid android:color="#292929" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>

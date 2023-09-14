@@ -211,7 +211,7 @@ class AnotherActivity : AppCompatActivity() {
          */
         buttonMain.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View?) {
-                val intent = Intent(this@AnotherActivity, MainActivity::class.java)
+                val intent = Intent(this@AnotherActivity, WebViewActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
                 startActivity(intent)
             }

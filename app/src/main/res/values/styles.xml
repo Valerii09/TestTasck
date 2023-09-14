@@ -24,4 +24,7 @@
         <item name="android:padding">8dp</item> <!-- Отступы внутри поля ввода -->
         <item name="android:textSize">16sp</item> <!-- Размер текста поля ввода -->
     </style>
+
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+    </style>
 </resources>

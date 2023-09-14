@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.example.testtasck.ScrollableWebView
+        <gofacts.sporhosee.ScrollableWebView
             android:id="@+id/webView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

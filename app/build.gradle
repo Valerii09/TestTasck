@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.testtasck'
+    namespace 'gofacts.sporhosee'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.testtasck"
+        applicationId "gofacts.sporhosee"
         minSdk 24
         targetSdk 33
         versionCode 1

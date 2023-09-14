@@ -6,9 +6,8 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import gofacts.sporhosee.R
 
-
+@Suppress("UNREACHABLE_CODE", "DEPRECATION")
 class NoInternetActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

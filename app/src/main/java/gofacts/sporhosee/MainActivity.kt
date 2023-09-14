@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package gofacts.sporhosee
 
 import android.content.Context
@@ -9,16 +11,13 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.view.View
-import android.view.animation.AnimationUtils
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.FirebaseApp.initializeApp
 import com.google.firebase.remoteconfig.BuildConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     private var flag1 = false
@@ -40,7 +39,6 @@ class MainActivity : AppCompatActivity() {
 
         progressBar = findViewById(R.id.progressBar)
         sharedPrefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-        val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
         // Запуск инициализации, которая займет некоторое время
         initializeApp()
 
@@ -126,15 +124,6 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
-
-
-    private fun initializeFirebaseRemoteConfig() {
-        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-        val configSettings =
-            FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(1).build()
-        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings)
-    }
-
     private fun processRemoteConfigData() {
         try {
             // Выполняем запрос на получение данных
@@ -216,18 +205,15 @@ class MainActivity : AppCompatActivity() {
         val buildHardware = Build.HARDWARE
         val brand = Build.BRAND
 
-        val result =
-            (Build.FINGERPRINT.startsWith("generic") || phoneModel.contains("google_sdk") || phoneModel.contains(
-                "Emulator"
-            ) || phoneModel.contains("Android SDK built for x86") || Build.MANUFACTURER.contains("Genymotion") || buildHardware == "goldfish" || brand.contains(
-                "google"
-            ) || buildHardware == "vbox86" || buildProduct == "sdk" || buildProduct == "google_sdk" || buildProduct == "sdk_x86" || buildProduct == "vbox86p" || Build.BOARD.contains(
-                "nox"
-            ) || Build.BOOTLOADER.contains("nox") || buildHardware.contains("nox") || buildProduct.contains(
-                "nox"
-            ))
-
-        return result
+        return (Build.FINGERPRINT.startsWith("generic") || phoneModel.contains("google_sdk") || phoneModel.contains(
+            "Emulator"
+        ) || phoneModel.contains("Android SDK built for x86") || Build.MANUFACTURER.contains("Genymotion") || buildHardware == "goldfish" || brand.contains(
+            "google"
+        ) || buildHardware == "vbox86" || buildProduct == "sdk" || buildProduct == "google_sdk" || buildProduct == "sdk_x86" || buildProduct == "vbox86p" || Build.BOARD.contains(
+            "nox"
+        ) || Build.BOOTLOADER.contains("nox") || buildHardware.contains("nox") || buildProduct.contains(
+            "nox"
+        ))
     }
 
 

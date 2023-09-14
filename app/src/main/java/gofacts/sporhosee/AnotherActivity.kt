@@ -1,4 +1,5 @@
 package gofacts.sporhosee
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,6 +14,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 
+@Suppress("DEPRECATION")
 class AnotherActivity : AppCompatActivity() {
 
     private lateinit var chronometer: Chronometer
@@ -71,6 +73,7 @@ class AnotherActivity : AppCompatActivity() {
      * После этого вызывается метод notifyDataSetChanged() адаптера,
      * чтобы обновить отображение изменений.
      */
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadWorkoutList() {
         val json = sharedPreferences.getString("workoutList", null)
         if (!json.isNullOrBlank()) {
@@ -82,6 +85,7 @@ class AnotherActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_another)

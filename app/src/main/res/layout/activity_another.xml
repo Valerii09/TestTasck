@@ -24,9 +24,9 @@
         <!-- Рециклер-вью с карточками -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_width="370dp"
+            android:layout_width="336dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/addWorkoutButton"
+            android:layout_below="@+id/editTextDuration"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="16dp" />
@@ -40,13 +40,13 @@
             style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextDuration"
+            android:layout_below="@+id/recyclerView"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="19dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="36dp"
             android:layout_toEndOf="@+id/addWorkoutButton"
-            android:text="Delete Workout" />
+            android:text="Delete last Workout" />
 
         <Chronometer
             android:id="@+id/chronometer"
@@ -60,6 +60,7 @@
         <!-- Кнопка "Start/Stop" -->
 
         <!-- Поля для ввода даты, упражнения и продолжительности -->
+
         <Button
             android:id="@+id/startStopButton"
             style="@style/ButtonStyle"
@@ -68,17 +69,17 @@
             android:layout_below="@+id/chronometer"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="33dp"
-            android:layout_marginTop="17dp"
-            android:layout_marginEnd="33dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="27dp"
+            android:layout_marginEnd="34dp"
             android:text="Start" />
 
         <EditText
             android:id="@+id/editTextDate"
             style="@style/EditTextStyle"
-            android:layout_width="372dp"
+            android:layout_width="328dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/startStopButton"
+            android:layout_below="@+id/resetButton"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
             android:hint="Date" />
@@ -86,7 +87,7 @@
         <EditText
             android:id="@+id/editTextExercise"
             style="@style/EditTextStyle"
-            android:layout_width="373dp"
+            android:layout_width="329dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editTextDate"
             android:layout_centerHorizontal="true"
@@ -96,7 +97,7 @@
         <EditText
             android:id="@+id/editTextDuration"
             style="@style/EditTextStyle"
-            android:layout_width="371dp"
+            android:layout_width="330dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editTextExercise"
             android:layout_centerHorizontal="true"
@@ -115,7 +116,7 @@
             style="@style/ButtonStyle"
             android:layout_width="158dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/editTextDuration"
+            android:layout_below="@+id/recyclerView"
             android:layout_alignParentStart="true"
             android:layout_marginStart="37dp"
             android:layout_marginTop="15dp"
@@ -124,9 +125,9 @@
         <Button
             android:id="@+id/resetButton"
             style="@style/ButtonStyle"
+            android:layout_below="@+id/startStopButton"
             android:layout_width="327dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/recyclerView"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="33dp"

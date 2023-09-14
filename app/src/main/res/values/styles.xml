@@ -12,7 +12,7 @@
         <item name="android:textColor">#FFFFFF</item> <!-- Цвет текста кнопки -->
         <item name="android:background">@drawable/button_bg</item> <!-- Фон кнопки -->
         <item name="android:padding">16dp</item> <!-- Отступы внутри кнопки -->
-        <item name="android:textSize">18sp</item> <!-- Размер текста кнопки -->
+        <item name="android:textSize">14sp</item> <!-- Размер текста кнопки -->
     </style>
 
     <!-- Стиль для полей ввода -->

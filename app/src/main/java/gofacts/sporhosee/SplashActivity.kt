@@ -1,10 +1,13 @@
 package gofacts.sporhosee
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 
+@SuppressLint("CustomSplashScreen")
+@Suppress("DEPRECATION")
 class SplashActivity : AppCompatActivity() {
     private val SPLASH_TIME_OUT = 2000 // Длительность сплэш-экрана в миллисекундах
 

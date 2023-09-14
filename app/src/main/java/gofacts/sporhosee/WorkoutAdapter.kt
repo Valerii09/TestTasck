@@ -26,18 +26,5 @@ class WorkoutAdapter(private val workoutList: MutableList<Workout>) : RecyclerVi
         holder.durationText.text = currentItem.duration
     }
 
-    fun addItemsToTop(items: List<Workout>) {
-        workoutList.addAll(0, items)
-        notifyDataSetChanged()
-    }
-
-    fun removeLastWorkout() {
-        if (workoutList.isNotEmpty()) {
-            workoutList.removeAt(workoutList.size - 1)
-            notifyItemRemoved(workoutList.size)
-        }
-    }
-
-
     override fun getItemCount() = workoutList.size
 }

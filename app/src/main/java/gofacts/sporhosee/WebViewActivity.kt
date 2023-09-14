@@ -34,9 +34,11 @@ class WebViewActivity : AppCompatActivity() {
     private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
     private var mCameraPhotoPath: String? = null
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
+
 
         // Устанавливаем макет для активности
         setContentView(R.layout.activity_webview)
@@ -55,6 +57,8 @@ class WebViewActivity : AppCompatActivity() {
 // Включить кеширование
         cookieManager.setAcceptCookie(true)
         cookieManager.setAcceptThirdPartyCookies(webView, true)
+
+        webView.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
 
         webSettings.apply {
             javaScriptEnabled = true
@@ -117,7 +121,7 @@ class WebViewActivity : AppCompatActivity() {
     }
 
     // Обработка нажатия кнопки "назад"
-    @Suppress("DEPRECATION")
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (webView.canGoBack()) {
             Log.d("onBackPressed", "нажата")
@@ -129,6 +133,7 @@ class WebViewActivity : AppCompatActivity() {
     }
 
     // Обработка результатов выбора файлов
+    @Deprecated("Deprecated in Java")
     @Suppress("DEPRECATION")
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode != INPUT_FILE_REQUEST_CODE || mFilePathCallback == null) {
@@ -155,6 +160,7 @@ class WebViewActivity : AppCompatActivity() {
     // Внутренный класс для обработки выбора файлов
     @Suppress("DEPRECATION")
     inner class ChromeClient : WebChromeClient() {
+        @SuppressLint("QueryPermissionsNeeded")
         override fun onShowFileChooser(
             view: WebView, filePath: ValueCallback<Array<Uri>>, fileChooserParams: FileChooserParams
         ): Boolean {

@@ -36,6 +36,7 @@ class WebViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.hide()
 
         // Устанавливаем макет для активности
         setContentView(R.layout.activity_webview)
@@ -44,11 +45,17 @@ class WebViewActivity : AppCompatActivity() {
 
         // Получаем URL из Intent
         val url = intent.extras?.getString("url").toString()
-
+        val cookieManager = CookieManager.getInstance()
+        cookieManager.setAcceptCookie(true)
+        cookieManager.setAcceptThirdPartyCookies(webView, true)
         // Настраиваем WebView
         webView.webViewClient = WebViewClient()
         webView.webChromeClient = ChromeClient()
         val webSettings = webView.settings
+// Включить кеширование
+        cookieManager.setAcceptCookie(true)
+        cookieManager.setAcceptThirdPartyCookies(webView, true)
+
         webSettings.apply {
             javaScriptEnabled = true
             loadWithOverviewMode = true
@@ -58,7 +65,9 @@ class WebViewActivity : AppCompatActivity() {
             setSupportZoom(false)
             allowFileAccess = true
             allowContentAccess = true
+
         }
+
 
         // Если есть сохраненное состояние WebView, восстанавливаем его; иначе загружаем URL
         if (savedInstanceState != null) {
@@ -67,10 +76,6 @@ class WebViewActivity : AppCompatActivity() {
             webView.loadUrl(url)
         }
 
-        // Настройки для управления куками
-        val cookieManager = CookieManager.getInstance()
-        cookieManager.setAcceptCookie(true)
-        cookieManager.setAcceptThirdPartyCookies(webView, true)
 
         // Настройка обработки кнопки "назад" в WebView
         webView.setOnKeyListener { _, keyCode, event ->
@@ -115,6 +120,7 @@ class WebViewActivity : AppCompatActivity() {
     @Suppress("DEPRECATION")
     override fun onBackPressed() {
         if (webView.canGoBack()) {
+            Log.d("onBackPressed", "нажата")
             webView.goBack() // Вернуться по истории браузера, если возможно
         } else {
             // Кнопка "Назад" заблокирована

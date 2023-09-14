@@ -36,37 +36,30 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        supportActionBar?.hide()
 
         progressBar = findViewById(R.id.progressBar)
-
+        sharedPrefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
+        val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
         // Запуск инициализации, которая займет некоторое время
         initializeApp()
 
-
+        val savedUrl = sharedPrefs.getString("savedUrl", "")
         // Проверяем доступность сети
         if (isNetworkAvailable()) {
-            initializeFirebaseRemoteConfig()
+
+            if (savedUrl.isNullOrEmpty()) {
+                processRemoteConfigData()
+                // Если сохраненная ссылка отсутствует или пустая
+                Log.d("MainActivity", "ссылка пустая")
+
+            } else {
+                flag2 = true
+
+            }
         } else {
             flag1 = true
             // Интернет недоступен, переходим к экрану без интернета
-
-        }
-
-        // Инициализация SharedPreferences
-        sharedPrefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
-        val sharedPreferences = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
-
-
-        val savedUrl = sharedPrefs.getString("savedUrl", "")
-
-        if (savedUrl.isNullOrEmpty()) {
-            processRemoteConfigData()
-            // Если сохраненная ссылка отсутствует или пустая
-            Log.d("MainActivity", "ссылка пустая")
-
-        } else {
-            flag2 = true
 
         }
     }
@@ -116,7 +109,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 2 -> {
                     Log.d("FlagTriggered", "Flag 2 сработал")
-                    openAnotherActivity()
+                    openWebViewActivity()
                 }
                 3 -> {
                     Log.d("FlagTriggered", "Flag 3 сработал")

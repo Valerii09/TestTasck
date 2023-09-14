@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources><style name="SplashTheme" parent="Theme.AppCompat.Light.DarkActionBar"    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
-    <!-- Устанавливаем новую иконку -->
-    <item name="android:icon">@drawable/baseline_add_reaction_24</item>
-    <!-- Другие атрибуты стиля -->
-</style>
+<resources>
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:icon">@drawable/baseline_add_reaction_24</item>
+        <!-- Другие атрибуты стиля -->
+    </style>
+
+    <!-- Стиль для кнопок -->
+    <style name="ButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#FFFFFF</item> <!-- Цвет текста кнопки -->
+        <item name="android:background">@drawable/button_bg</item> <!-- Фон кнопки -->
+        <item name="android:padding">16dp</item> <!-- Отступы внутри кнопки -->
+        <item name="android:textSize">18sp</item> <!-- Размер текста кнопки -->
+    </style>
+
+    <!-- Стиль для полей ввода -->
+    <style name="EditTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#000000</item> <!-- Цвет текста поля ввода -->
+        <item name="android:background">@drawable/edittext_background</item> <!-- Фон поля ввода -->
+        <item name="android:padding">8dp</item> <!-- Отступы внутри поля ввода -->
+        <item name="android:textSize">16sp</item> <!-- Размер текста поля ввода -->
+    </style>
 </resources>

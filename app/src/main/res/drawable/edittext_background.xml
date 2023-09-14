@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Состояние фокуса -->
+    <item android:state_focused="true">
+        <shape>
+            <solid android:color="#F0F0F0" /> <!-- Цвет фона при фокусе -->
+            <stroke android:color="#007AFF" android:width="2dp" /> <!-- Цвет обводки при фокусе -->
+            <corners android:radius="8dp" /> <!-- Закругленные углы -->
+        </shape>
+    </item>
+    <!-- Обычное состояние -->
+    <item>
+        <shape>
+            <solid android:color="#EDEDED" /> <!-- Цвет фона в обычном состоянии -->
+            <stroke android:color="#CCCCCC" android:width="2dp" /> <!-- Цвет обводки в обычном состоянии -->
+            <corners android:radius="8dp" /> <!-- Закругленные углы -->
+        </shape>
+    </item>
+</selector>

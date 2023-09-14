@@ -197,7 +197,7 @@ class AnotherActivity : AppCompatActivity() {
         })
 
         // Пример добавления тренировки:
-        val workout = Workout("2023-09-10", "Приседания", "30 минут")
+        val workout = Workout("2023-09-10", "squats", "30 minutes")
         workoutList.add(workout)
         workoutAdapter.notifyDataSetChanged() // Обновить RecyclerView
 

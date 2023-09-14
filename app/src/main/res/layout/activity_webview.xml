@@ -29,31 +29,7 @@
             android:inputType="text"
             android:imeOptions="actionSearch"/>
 
-        <Button
-            android:id="@+id/button_main"
-            android:layout_width="166dp"
-            android:layout_height="123dp"
-            android:layout_below="@+id/webView"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="14dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="66dp"
-            android:text="Перейти на другую страницу" />
 
-        <Button
-            android:id="@+id/button_clear_saved_url"
-            android:layout_width="166dp"
-            android:layout_height="120dp"
-            android:layout_below="@+id/webView"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="39dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="26dp"
-            android:layout_marginBottom="68dp"
-            android:layout_toEndOf="@+id/button_main"
-            android:text="Удалить сохраненную ссылку" />
 
     </RelativeLayout>
 </androidx.core.widget.NestedScrollView>

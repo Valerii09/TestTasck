@@ -202,21 +202,6 @@ class AnotherActivity : AppCompatActivity() {
         workoutAdapter.notifyDataSetChanged() // Обновить RecyclerView
 
 
-
-        val buttonMain = findViewById<Button>(R.id.backButton)
-
-        /**
-         * Создает и запускает явный интент для перехода на активность MainActivity.
-         * Устанавливает флаги Intent.FLAG_ACTIVITY_CLEAR_TOP и Intent.FLAG_ACTIVITY_SINGLE_TOP,
-         */
-        buttonMain.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View?) {
-                val intent = Intent(this@AnotherActivity, WebViewActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-                startActivity(intent)
-            }
-        })
-
     }
 }
 

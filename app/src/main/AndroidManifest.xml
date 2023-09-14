@@ -29,12 +29,11 @@
         </activity>
 
         <activity android:name=".NoInternetActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:configChanges="orientation|screenSize"/>
+
+        <activity android:name=".WebViewActivity"
+            android:configChanges="orientation|screenSize"/>
+
 
         <activity android:name=".AnotherActivity"
             android:configChanges="orientation|screenSize"/>

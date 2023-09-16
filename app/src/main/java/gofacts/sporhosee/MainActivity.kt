@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
-
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         progressBar = findViewById(R.id.progressBar)
         sharedPrefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
         // Запуск инициализации, которая займет некоторое время

@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private var flag2 = false
     private var flag3 = false
     private var flag4 = false
+    private var shouldSpeedUp = false
 
 
     private lateinit var progressBar: ProgressBar
@@ -57,35 +58,27 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             flag1 = true
+            shouldSpeedUp = true
             // Интернет недоступен, переходим к экрану без интернета
 
         }
     }
 
     private fun initializeApp() {
-        // Показываем прогресс-бар
         progressBar.progress = 0
 
-        // Устанавливаем флаг для ускорения (если флаг сработал)
-        val shouldSpeedUp = flag1 || flag2 || flag3 || flag4
-
-        // Переменная для хранения информации о флаге, который сработал
         var flagThatTriggered = 0
 
-        // Симулируем инициализацию (заполнение прогресс-бара)
         Thread {
             for (i in 1..100) {
                 handler.post {
                     progressBar.progress = i
                 }
 
-                // Устанавливаем скорость в зависимости от флага и значения i
-                val delay = if (shouldSpeedUp) i.toLong() else 45L
+                val delay = if (shouldSpeedUp) 12L else 45L // Ускоряем после первого задействования флага
 
-                // Задержка
                 Thread.sleep(delay)
 
-                // Записываем номер флага, который сработал
                 if (flag1) {
                     flagThatTriggered = 1
                 }
@@ -134,7 +127,7 @@ class MainActivity : AppCompatActivity() {
 
                     if (url.isEmpty() || isGoogleDevice() || isEmulator()) {
                         flag3 = true
-
+                        shouldSpeedUp = true
                         Log.d(
                             "MainActivity", "прошла условие Значение URL из Remote Config: $url"
                         )
@@ -149,10 +142,12 @@ class MainActivity : AppCompatActivity() {
                     }
                 } else {
                     handleFetchFailure()
+                    shouldSpeedUp = true
                 }
             }
         } catch (e: Exception) {
             handleFetchFailure()
+            shouldSpeedUp = true
         }
     }
 

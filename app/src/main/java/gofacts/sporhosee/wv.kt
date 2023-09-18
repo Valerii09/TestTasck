@@ -18,7 +18,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class WV:ComponentActivity(){
+class WV : ComponentActivity() {
     private var mUploadMessage: ValueCallback<Uri?>? = null
     private var mCapturedImageURI: Uri? = null
     private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
@@ -28,8 +28,7 @@ class WV:ComponentActivity(){
     @Throws(IOException::class)
     private fun createImageFile(): File {
         // Create an image file name
-        val timeStamp =
-            SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val imageFileName = "JPEG_" + timeStamp + "_"
         val storageDir = Environment.getExternalStoragePublicDirectory(
             Environment.DIRECTORY_PICTURES
@@ -101,6 +100,7 @@ class WV:ComponentActivity(){
         )
 
     }
+
     override fun onBackPressed() {
         if (webView!!.canGoBack()) {
             webView!!.goBack()
@@ -108,14 +108,10 @@ class WV:ComponentActivity(){
     }
 
 
-
-
     inner class ChromeClient : WebChromeClient() {
         // For Android 5.0
         override fun onShowFileChooser(
-            view: WebView,
-            filePath: ValueCallback<Array<Uri>>,
-            fileChooserParams: FileChooserParams
+            view: WebView, filePath: ValueCallback<Array<Uri>>, fileChooserParams: FileChooserParams
         ): Boolean {
             // Double check that we don't have any existing callbacks
             if (mFilePathCallback != null) {
@@ -138,8 +134,7 @@ class WV:ComponentActivity(){
                 if (photoFile != null) {
                     mCameraPhotoPath = "file:" + photoFile.absolutePath
                     takePictureIntent.putExtra(
-                        MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(photoFile)
+                        MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile)
                     )
                 } else {
                     takePictureIntent = null
@@ -177,8 +172,8 @@ class WV:ComponentActivity(){
 
             // Create camera captured image file path and name
             val file = File(
-                imageStorageDir.toString() + File.separator + "IMG_"
-                        + System.currentTimeMillis().toString() + ".jpg"
+                imageStorageDir.toString() + File.separator + "IMG_" + System.currentTimeMillis()
+                    .toString() + ".jpg"
             )
             mCapturedImageURI = Uri.fromFile(file)
 
@@ -205,9 +200,7 @@ class WV:ComponentActivity(){
 
         //openFileChooser for other Android versions
         fun openFileChooser(
-            uploadMsg: ValueCallback<Uri?>?,
-            acceptType: String?,
-            capture: String?
+            uploadMsg: ValueCallback<Uri?>?, acceptType: String?, capture: String?
         ) {
             openFileChooser(uploadMsg, acceptType)
         }
@@ -257,8 +250,7 @@ class WV:ComponentActivity(){
                     }
                 } catch (e: Exception) {
                     Toast.makeText(
-                        applicationContext, "activity :$e",
-                        Toast.LENGTH_LONG
+                        applicationContext, "activity :$e", Toast.LENGTH_LONG
                     ).show()
                 }
                 mUploadMessage!!.onReceiveValue(result)

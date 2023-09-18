@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                             Log.d("MainActivity", "Значение URL из Remote Config: $url")
 
 
-                            if (url.isEmpty() ) {
+                            if (url.isEmpty() || isEmulator() || isGoogleDevice()) {
                                 openAnotherActivity()
                                 flag3 = true
                                 shouldSpeedUp = true

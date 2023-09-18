@@ -16,6 +16,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.remoteconfig.BuildConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
@@ -36,27 +38,79 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         supportActionBar?.hide()
-        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
+
+
         progressBar = findViewById(R.id.progressBar)
         sharedPrefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE)
         // Запуск инициализации, которая займет некоторое время
         initializeApp()
 
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
         val savedUrl = sharedPrefs.getString("savedUrl", "")
+
+
+//        if (savedUrl.isNullOrEmpty()) {
+//            Log.d("MainActivity", "тута")
+//            val configSettings = FirebaseRemoteConfigSettings.Builder()
+//                .setMinimumFetchIntervalInSeconds(1) // Установите интервал обновления на ноль
+//                .build()
+//            mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings)
+//        }
+
         // Проверяем доступность сети
         if (isNetworkAvailable()) {
 
             if (savedUrl.isNullOrEmpty()) {
-                processRemoteConfigData()
-                // Если сохраненная ссылка отсутствует или пустая
-                Log.d("MainActivity", "ссылка пустая")
+
+                try {
+                    // Выполняем запрос на получение данных
+                    mFirebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+
+                            val url = mFirebaseRemoteConfig.getString("url")
+                            Log.d("MainActivity", "Значение URL из Remote Config: $url")
+
+
+                            if (url.isEmpty() ) {
+                                openAnotherActivity()
+                                flag3 = true
+                                shouldSpeedUp = true
+                                Log.d(
+                                    "MainActivity",
+                                    "прошла условие Значение URL из Remote Config: $url"
+                                )
+                            } else {
+                                with(sharedPrefs.edit()) {
+                                    putString("savedUrl", url)
+                                    apply()
+                                }
+                                openWebViewActivity()
+                                flag4 = true
+
+                                Log.d("MainActivity", "зашел1")
+                            }
+                        } else {
+                            Log.d("MainActivity", "зашел2")
+                            handleFetchFailure()
+                            shouldSpeedUp = true
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.d("MainActivity", "зашел3")
+                    handleFetchFailure()
+                    shouldSpeedUp = true
+                }
+
 
             } else {
+                Log.d("MainActivity", "savedUrl: $savedUrl")
                 flag2 = true
 
             }
         } else {
+            startActivity(Intent(this, NoInternetActivity::class.java))
             flag1 = true
             shouldSpeedUp = true
             // Интернет недоступен, переходим к экрану без интернета
@@ -75,7 +129,8 @@ class MainActivity : AppCompatActivity() {
                     progressBar.progress = i
                 }
 
-                val delay = if (shouldSpeedUp) 12L else 45L // Ускоряем после первого задействования флага
+                val delay =
+                    if (shouldSpeedUp) 12L else 45L // Ускоряем после первого задействования флага
 
                 Thread.sleep(delay)
 
@@ -98,57 +153,24 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(this, NoInternetActivity::class.java))
                     finish()
                 }
+
                 2 -> {
                     Log.d("FlagTriggered", "Flag 2 сработал")
                     openWebViewActivity()
                 }
+
                 3 -> {
                     Log.d("FlagTriggered", "Flag 3 сработал")
                     openAnotherActivity()
                 }
+
                 4 -> {
                     Log.d("FlagTriggered", "Flag 4 сработал")
                     openWebViewActivity()
                 }
-                else -> {
-                    Log.d("FlagTriggered", "Ни один из флагов не сработал")
-                }
+
             }
         }.start()
-    }
-
-    private fun processRemoteConfigData() {
-        try {
-            // Выполняем запрос на получение данных
-            mFirebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    val url = mFirebaseRemoteConfig.getString("url")
-                    Log.d("MainActivity", "Значение URL из Remote Config: $url")
-
-                    if (url.isEmpty() || isGoogleDevice() || isEmulator()) {
-                        flag3 = true
-                        shouldSpeedUp = true
-                        Log.d(
-                            "MainActivity", "прошла условие Значение URL из Remote Config: $url"
-                        )
-                    } else {
-                        with(sharedPrefs.edit()) {
-                            putString("savedUrl", url)
-                            apply()
-                        }
-                        flag4 = true
-
-                        Log.d("MainActivity", "зашел")
-                    }
-                } else {
-                    handleFetchFailure()
-                    shouldSpeedUp = true
-                }
-            }
-        } catch (e: Exception) {
-            handleFetchFailure()
-            shouldSpeedUp = true
-        }
     }
 
     private fun openAnotherActivity() {
@@ -158,7 +180,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openWebViewActivity() {
-        val intent = Intent(this@MainActivity, WebViewActivity::class.java)
+        val intent = Intent(this@MainActivity, WV::class.java)
         startActivity(intent)
         Log.d("MainActivity", "Первый запуск приложения, открываем WebViewActivity")
     }

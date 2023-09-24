@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.remoteconfig.BuildConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import java.util.Locale
 
 
 @Suppress("DEPRECATION")
@@ -60,62 +61,61 @@ class MainActivity : AppCompatActivity() {
 //        }
 
         // Проверяем доступность сети
-        if (isNetworkAvailable()) {
+//        if (isNetworkAvailable()) {
 
-            if (savedUrl.isNullOrEmpty()) {
+        if (savedUrl.isNullOrEmpty() ) {
 
-                try {
-                    // Выполняем запрос на получение данных
-                    mFirebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(this) { task ->
-                        if (task.isSuccessful) {
+            try {
+                // Выполняем запрос на получение данных
+                mFirebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
 
-                            val url = mFirebaseRemoteConfig.getString("url")
-                            Log.d("MainActivity", "Значение URL из Remote Config: $url")
+                        val url = mFirebaseRemoteConfig.getString("url")
+                        Log.d("MainActivity", "Значение URL из Remote Config: $url")
 
 
-                            if (url.isEmpty() || isEmulator() || isGoogleDevice()) {
-                                openAnotherActivity()
-                                flag3 = true
-                                shouldSpeedUp = true
-                                Log.d(
-                                    "MainActivity",
-                                    "прошла условие Значение URL из Remote Config: $url"
-                                )
-                            } else {
-                                with(sharedPrefs.edit()) {
-                                    putString("savedUrl", url)
-                                    apply()
-                                }
-                                openWebViewActivity()
-                                flag4 = true
-
-                                Log.d("MainActivity", "зашел1")
-                            }
-                        } else {
-                            Log.d("MainActivity", "зашел2")
-                            handleFetchFailure()
+                        if (url.isEmpty() || isEmulator() ) {
+                            openAnotherActivity()
+//                                flag3 = true
                             shouldSpeedUp = true
+                            Log.d(
+                                "MainActivity",
+                                "прошла условие Значение URL из Remote Config: $url"
+                            )
+                        } else {
+                            with(sharedPrefs.edit()) {
+                                putString("savedUrl", url)
+                                apply()
+                            }
+                            openWebViewActivity()
+//                                flag4 = true
+                            Log.d("MainActivity", "зашел1")
                         }
+                    } else {
+                        Log.d("MainActivity", "зашел2")
+                        handleFetchFailure()
+                        shouldSpeedUp = true
                     }
-                } catch (e: Exception) {
-                    Log.d("MainActivity", "зашел3")
-                    handleFetchFailure()
-                    shouldSpeedUp = true
                 }
-
-
-            } else {
-                Log.d("MainActivity", "savedUrl: $savedUrl")
-                flag2 = true
-
+            } catch (e: Exception) {
+                Log.d("MainActivity", "зашел3")
+                handleFetchFailure()
+                shouldSpeedUp = true
             }
-        } else {
-            startActivity(Intent(this, NoInternetActivity::class.java))
-            flag1 = true
-            shouldSpeedUp = true
-            // Интернет недоступен, переходим к экрану без интернета
 
+
+        } else {
+            Log.d("MainActivity", "savedUrl: $savedUrl")
+            openWebViewActivity()
+//                flag2 = true
         }
+//        } else {
+//            startActivity(Intent(this, NoInternetActivity::class.java))
+//            flag1 = true
+//            shouldSpeedUp = true
+//            // Интернет недоступен, переходим к экрану без интернета
+//
+//        }
     }
 
     private fun initializeApp() {
@@ -209,28 +209,48 @@ class MainActivity : AppCompatActivity() {
         startActivity(errorIntent)
     }
 
-    private fun isGoogleDevice(): Boolean {
-        return Build.BRAND.equals("google", ignoreCase = true)
-    }
+
 
 
     private fun isEmulator(): Boolean {
-        if (BuildConfig.DEBUG) return false
-
         val phoneModel = Build.MODEL
         val buildProduct = Build.PRODUCT
         val buildHardware = Build.HARDWARE
-        val brand = Build.BRAND
 
-        return (Build.FINGERPRINT.startsWith("generic") || phoneModel.contains("google_sdk") || phoneModel.contains(
-            "Emulator"
-        ) || phoneModel.contains("Android SDK built for x86") || Build.MANUFACTURER.contains("Genymotion") || buildHardware == "goldfish" || brand.contains(
-            "google"
-        ) || buildHardware == "vbox86" || buildProduct == "sdk" || buildProduct == "google_sdk" || buildProduct == "sdk_x86" || buildProduct == "vbox86p" || Build.BOARD.contains(
-            "nox"
-        ) || Build.BOOTLOADER.contains("nox") || buildHardware.contains("nox") || buildProduct.contains(
-            "nox"
-        ))
+
+        var result = (Build.FINGERPRINT.startsWith("generic")
+                || phoneModel.contains("google_sdk")
+                || phoneModel.lowercase(Locale.getDefault())
+            .contains("droid4x")
+                || phoneModel.contains("Emulator")
+                || phoneModel.contains("Android SDK built for x86")
+                || Build.MANUFACTURER.contains("Genymotion")
+                || buildHardware == "goldfish"
+                || Build.BRAND.contains("google")
+                || buildHardware == "vbox86"
+                || buildProduct == "sdk"
+                || buildProduct == "google_sdk"
+                || buildProduct == "sdk_x86"
+                || buildProduct == "vbox86p"
+                || Build.BOARD.lowercase(Locale.getDefault())
+            .contains("nox")
+                || Build.BOOTLOADER.lowercase(Locale.getDefault())
+            .contains("nox")
+                || buildHardware.lowercase(Locale.getDefault())
+            .contains("nox")
+                || buildProduct.lowercase(Locale.getDefault())
+            .contains("nox"))
+
+        if (result) return true
+        result =
+            result or (Build.BRAND.startsWith("generic")) && Build.DEVICE.startsWith(
+                "generic"
+            )
+        if (result) return true
+        result = result or ("google_sdk" == buildProduct)
+        return result
+
+
     }
 
 

@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace 'gofacts.sporhosee'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "gofacts.sporhosee"
-        minSdk 24
-        targetSdk 33
+        minSdk 21
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
